@@ -1,4 +1,6 @@
 const gameBoard = (() => {
+  let playerX = true;
+
   const buildBoard = () => {
     // Board
     const body = document.querySelector('body');
@@ -13,7 +15,8 @@ const gameBoard = (() => {
         square.classList.add('square');
         square.textContent = 'square';
         square.addEventListener('click', () => {
-          square.textContent = 'hat';
+          playerX ? square.textContent = 'X' : square.textContent = 'O';
+          playerX = !playerX;
         });
         board.appendChild(square);
       }
