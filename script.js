@@ -68,6 +68,7 @@ const gameLogic = (() => {
   const runChecks = () => {
     checkHorizontal();
     checkVertical();
+    checkDiagonal();
   };
 
   const checkHorizontal = () => {
@@ -86,7 +87,17 @@ const gameLogic = (() => {
         gameBoard.changeStatusText(squareArray[0][j]);
       }
     }
-  }
+  };
+
+  const checkDiagonal = () => {
+    if (squareArray[0][0] === squareArray[1][1] && squareArray[0][0] === squareArray[2][2] && squareArray[0][0] !== undefined) {
+      gameBoard.changeGameStatus(false);
+      gameBoard.changeStatusText(squareArray[0][0]);
+    } else if (squareArray[0][2] === squareArray[1][1] && squareArray[0][2] === squareArray[2][0] && squareArray[0][2] !== undefined) {
+      gameBoard.changeGameStatus(false);
+      gameBoard.changeStatusText(squareArray[0][2]);
+    }
+  };
 
   return { runChecks, markSquare };
 })();
