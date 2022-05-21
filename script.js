@@ -33,7 +33,7 @@ const gameBoard = (() => {
             gameLogic.markSquare(squares[0], squares[1], square.textContent);
             gameLogic.runChecks();
             if (playGame) {
-              changeStatusText();
+              changeStatusText(playerX ? 'X' : 'O');
             }
           }
         });
@@ -42,16 +42,20 @@ const gameBoard = (() => {
     }
   };
 
-  const changeStatusText = () => {
+  const changeGameStatus = (status) => {
+    playGame = status;
+  }
+
+  const changeStatusText = (player) => {
     gameStatusText = document.querySelector('#statusText');
-    if (playerX && playGame) {
-      gameStatusText.textContent = 'Playing, X\'s turn';
-    } else if (!playerX && playGame) {
-      gameStatusText.textContent = 'Playing, O\'s turn';
+    if (playGame) {
+      gameStatusText.textContent = `Playing, ${player}'s turn`;
+    } else {
+      gameStatusText.textContent = `${player} Wins!`;
     }
   };
   
-  return { buildBoard, changeStatusText, playGame };
+  return { buildBoard, changeStatusText, changeGameStatus };
 })();
 
 const gameLogic = (() => {
@@ -62,13 +66,15 @@ const gameLogic = (() => {
   }
 
   const runChecks = () => {
-    checkHorizontal('X');
-    checkHorizontal('O');
+    checkHorizontal();
   };
 
-  const checkHorizontal = (player) => {
+  const checkHorizontal = () => {
     for (let i = 0; i < 3; i++) {
-      // use array.every for this
+      if (squareArray[i][0] === squareArray[i][1] && squareArray[i][0] === squareArray[i][2] && squareArray[i][0] !== undefined) {
+        gameBoard.changeGameStatus(false);
+        gameBoard.changeStatusText(squareArray[i][0]);
+      }
     }
   };
 
