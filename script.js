@@ -67,6 +67,7 @@ const gameLogic = (() => {
 
   const runChecks = () => {
     checkHorizontal();
+    checkVertical();
   };
 
   const checkHorizontal = () => {
@@ -77,6 +78,15 @@ const gameLogic = (() => {
       }
     }
   };
+
+  const checkVertical = () => {
+    for (let j = 0; j < 3; j++) {
+      if (squareArray[0][j] === squareArray[1][j] && squareArray[0][j] === squareArray[2][j] && squareArray[0][j] !== undefined) {
+        gameBoard.changeGameStatus(false);
+        gameBoard.changeStatusText(squareArray[0][j]);
+      }
+    }
+  }
 
   return { runChecks, markSquare };
 })();
