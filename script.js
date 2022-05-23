@@ -70,10 +70,12 @@ const gameBoard = (() => {
 
   const changeStatusText = (player) => {
     gameStatusText = document.querySelector('#statusText');
-    if (playGame) {
+    if (playGame && gameLogic.getTurnCounter() !== 9) {
       gameStatusText.textContent = `${player}'s turn`;
-    } else {
+    } else if (!playGame && gameLogic.getTurnCounter() !== 9) {
       gameStatusText.textContent = `${player} Wins!`;
+    } else {
+      gameStatusText.textContent = 'Draw';
     }
   };
 
@@ -84,12 +86,17 @@ const gameBoard = (() => {
   const getPlayerOName = () => {
     return playerOName;
   };
+
+  const getGameStatus = () => {
+    return playGame;
+  };
   
-  return { buildBoard, changeStatusText, changeGameStatus, getPlayerXName, getPlayerOName };
+  return { buildBoard, changeStatusText, changeGameStatus, getPlayerXName, getPlayerOName, getGameStatus };
 })();
 
 const gameLogic = (() => {
   let squareArray = [[], [], []];
+  let turnCounter = 0;
 
   const markSquare = (row, column, player) => {
     squareArray[row][column] = player;
@@ -99,6 +106,10 @@ const gameLogic = (() => {
     checkHorizontal();
     checkVertical();
     checkDiagonal();
+    turnCounter++;
+    if (turnCounter === 9 && gameBoard.getGameStatus() === true) {
+      gameBoard.changeStatusText('Draw');
+    }
   };
 
   const checkHorizontal = () => {
@@ -129,7 +140,11 @@ const gameLogic = (() => {
     }
   };
 
-  return { runChecks, markSquare };
+  const getTurnCounter = () => {
+    return turnCounter;
+  };
+
+  return { runChecks, markSquare, getTurnCounter };
 })();
 
 gameBoard.buildBoard();
