@@ -1,18 +1,40 @@
 const gameBoard = (() => {
   let playerX = true;
-  let playGame = true;
+  let playGame = false;
+  let playerXName = '';
+  let playerOName = '';
 
   const buildBoard = () => {
     // Board
     const body = document.querySelector('body');
     const board = document.createElement('div');
     const gameStatus = document.createElement('h2');
+    const playerXNameInput = document.createElement('input');
+    const playerONameInput = document.createElement('input');
+    const playButton = document.createElement('button');
 
     board.setAttribute('id', 'board');
-    gameStatus.textContent = 'Playing, X\'s turn';
+    gameStatus.textContent = 'Input names, and press play to start';
     gameStatus.setAttribute('id', 'statusText');
+    playerXNameInput.setAttribute('placeholder', 'Player X Name');
+    playerONameInput.setAttribute('placeholder', 'Player O Name');
+    playButton.textContent = 'Play';
+
+    // Play button
+    playButton.addEventListener('click', () => {
+      playerXName = playerXNameInput.value === '' ? 'Player X' : playerXNameInput.value;
+      playerOName = playerONameInput.value === '' ? 'Player O' : playerONameInput.value;
+      playGame = true;
+      changeStatusText(playerXName);
+    }, {
+      once: true
+    });
+
     body.appendChild(board);
     body.appendChild(gameStatus);
+    body.appendChild(playerXNameInput);
+    body.appendChild(playerONameInput);
+    body.appendChild(playButton);
 
     // Squares
     for (let i = 0; i < 3; i++) {
@@ -33,7 +55,7 @@ const gameBoard = (() => {
             gameLogic.markSquare(squares[0], squares[1], square.textContent);
             gameLogic.runChecks();
             if (playGame) {
-              changeStatusText(playerX ? 'X' : 'O');
+              changeStatusText(playerX ? playerXName : playerOName);
             }
           }
         });
@@ -49,13 +71,21 @@ const gameBoard = (() => {
   const changeStatusText = (player) => {
     gameStatusText = document.querySelector('#statusText');
     if (playGame) {
-      gameStatusText.textContent = `Playing, ${player}'s turn`;
+      gameStatusText.textContent = `${player}'s turn`;
     } else {
       gameStatusText.textContent = `${player} Wins!`;
     }
   };
+
+  const getPlayerXName = () => {
+    return playerXName;
+  };
+
+  const getPlayerOName = () => {
+    return playerOName;
+  };
   
-  return { buildBoard, changeStatusText, changeGameStatus };
+  return { buildBoard, changeStatusText, changeGameStatus, getPlayerXName, getPlayerOName };
 })();
 
 const gameLogic = (() => {
@@ -75,7 +105,7 @@ const gameLogic = (() => {
     for (let i = 0; i < 3; i++) {
       if (squareArray[i][0] === squareArray[i][1] && squareArray[i][0] === squareArray[i][2] && squareArray[i][0] !== undefined) {
         gameBoard.changeGameStatus(false);
-        gameBoard.changeStatusText(squareArray[i][0]);
+        gameBoard.changeStatusText(squareArray[i][0] === 'X' ? gameBoard.getPlayerXName() : gameBoard.getPlayerOName());
       }
     }
   };
@@ -84,7 +114,7 @@ const gameLogic = (() => {
     for (let j = 0; j < 3; j++) {
       if (squareArray[0][j] === squareArray[1][j] && squareArray[0][j] === squareArray[2][j] && squareArray[0][j] !== undefined) {
         gameBoard.changeGameStatus(false);
-        gameBoard.changeStatusText(squareArray[0][j]);
+        gameBoard.changeStatusText(squareArray[0][j] === 'X' ? gameBoard.getPlayerXName() : gameBoard.getPlayerOName());
       }
     }
   };
@@ -92,10 +122,10 @@ const gameLogic = (() => {
   const checkDiagonal = () => {
     if (squareArray[0][0] === squareArray[1][1] && squareArray[0][0] === squareArray[2][2] && squareArray[0][0] !== undefined) {
       gameBoard.changeGameStatus(false);
-      gameBoard.changeStatusText(squareArray[0][0]);
+      gameBoard.changeStatusText(squareArray[0][0] === 'X' ? gameBoard.getPlayerXName() : gameBoard.getPlayerOName());
     } else if (squareArray[0][2] === squareArray[1][1] && squareArray[0][2] === squareArray[2][0] && squareArray[0][2] !== undefined) {
       gameBoard.changeGameStatus(false);
-      gameBoard.changeStatusText(squareArray[0][2]);
+      gameBoard.changeStatusText(squareArray[0][2] === 'X' ? gameBoard.getPlayerXName() : gameBoard.getPlayerOName());
     }
   };
 
