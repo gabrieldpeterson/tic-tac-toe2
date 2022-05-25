@@ -26,6 +26,9 @@ const gameBoard = (() => {
       playerOName = playerONameInput.value === '' ? 'Player O' : playerONameInput.value;
       playGame = true;
       changeStatusText(playerXName);
+      playerXNameInput.classList.add('hide');
+      playerONameInput.classList.add('hide');
+      playButton.classList.add('hide');
     }, {
       once: true
     });
@@ -109,6 +112,18 @@ const gameLogic = (() => {
     turnCounter++;
     if (turnCounter === 9 && gameBoard.getGameStatus() === true) {
       gameBoard.changeStatusText('Draw');
+    }
+    if (gameBoard.getGameStatus() === false) {
+      const body = document.querySelector('body');
+      const playAgainButton = document.createElement('button');
+
+      playAgainButton.textContent = 'Play Again';
+
+      playAgainButton.addEventListener('click', () => {
+        location.reload();
+      });
+
+      body.appendChild(playAgainButton);
     }
   };
 
